@@ -52,6 +52,7 @@ form button:hover {
     justify-content: space-between;
     margin: 1.5rem;
     min-height: 40%;
+    transition: all 0.3s ease;
 }
 
 .tarea li
@@ -62,6 +63,7 @@ form button:hover {
 .nuevaTarea
 {
     list-style: none;
+    margin-left: 1rem;
 }
 
 .completada, .eliminar
@@ -94,4 +96,16 @@ form button:hover {
 {
     color:white;
     background: red;
+}
+
+.tareaCompletada
+{
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.tareaEliminada
+{
+    opacity: 0;
+    transform: translateY(8rem) rotateZ(20deg);
 }
