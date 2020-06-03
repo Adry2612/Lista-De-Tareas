@@ -11,9 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Al seleccionar cada una de las opciones indicadas se realizará un filtro entre todas las tareas, las tareas finalizadas y las pendientes.
   seleccion.addEventListener('click', filtroTareas);
+
+  // Obtenemos todas las tareas que se hayan creado previamente que estén guardadas en LocalStorage.
+  obtenerTareas();
 });
 
-// Funciones
+/* Funciones */
 
 // Añadir la tarea.
 function addTarea(event) {
@@ -96,6 +99,49 @@ function guardarTarea(tarea){
     localStorage.setItem('listaDeTareas', JSON.stringify(todasLasTareas));
 }
 
+// Obtenemos todas las tareas que tenemos guardadadas en LocalStorage para añadirlas a la lista.
+function obtenerTareas(){
+  var todasLasTareas;
+
+  if(localStorage.getItem('listaDeTareas') == null){
+    todasLasTareas = [];
+  } else{
+    todasLasTareas = JSON.parse(localStorage.getItem('listaDeTareas'));
+  }
+
+  // Por cada una de las tareas recrearemos lo realizado en la función addTarea().
+  todasLasTareas.forEach(tarea =>{
+    // Creamos los elementos necesarios para realizar la estructura HTML.
+    var newDiv = document.createElement("div");
+    newDiv.classList.add("tarea");
+
+    // Elemento de lista.
+    var li = document.createElement("li");
+    li.classList.add("nuevaTarea");
+
+    // Botones que se encontrarán dentro de cada uno de los contenedor de tareas. Añadimos un evento click para que realicen la función especificada además de una clase identificativa.
+    var finalizada = document.createElement("button");
+    finalizada.innerHTML = '<i class="fas fa-check"></i>';
+    finalizada.classList.add("completada");
+    finalizada.addEventListener("click", completarTarea);
+
+    var borrar = document.createElement("button");
+    borrar.innerHTML = '<i class="fas fa-trash-alt"></i>';
+    borrar.classList.add("eliminar");
+    borrar.addEventListener("click", eliminarTarea);
+
+    // Obtenemos el selector del contenedor principal donde guardaremos las tareas.
+    var contenedor = document.querySelector(".listaTareas");
+
+    // Añadir todos los elementos al contenedor de tareas.
+    li.innerHTML = tarea;
+    newDiv.appendChild(li);
+    newDiv.appendChild(finalizada);
+    newDiv.appendChild(borrar);
+    contenedor.appendChild(newDiv);
+    });
+}
+
 // Filtro que nos permitirá seleccionar si queremos ver todas las tareas creadas, las finalizadas o las incompletas.
 function filtroTareas(){
     // Seleccionamos todas las tareas y, por cada una de ellas, dependiendo de la selección del filtro, mostraremos o ocultaremos las tareas según la selección.
@@ -124,14 +170,15 @@ function filtroTareas(){
     });
 }
 
-
 // Comprobamos si el campo Input esta vacio, si lo esta al pulsar el botón no se deberá añadir ninguna tarea y se deberá mostrar un mensaje de error.
 function comprobarVacio() {
   var input = document.querySelector(".tarea");
-
+  var vacio;
   if (input.value == "") {
-    return true;
+    vacio = true;
   } else {
-    return false;
+    vacio = false;
   }
+
+  return vacio;
 }
